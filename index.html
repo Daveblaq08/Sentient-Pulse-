@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentient Pulse - Community Governance Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+        }
+
+        .status-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .status-card .label {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-card .value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-card .change {
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .change.positive {
+            color: #48bb78;
+        }
+
+        .change.negative {
+            color: #f56565;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .panel h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .proposal-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .proposal-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .proposal-card.positive {
+            border-left-color: #48bb78;
+        }
+
+        .proposal-card.negative {
+            border-left-color: #f56565;
+        }
+
+        .proposal-card.neutral {
+            border-left-color: #ed8936;
+        }
+
+        .proposal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+        }
+
+        .proposal-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #a0a0a0;
+        }
+
+        .sentiment-gauge {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .gauge-bar {
+            flex: 1;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f56565, #ed8936, #48bb78);
+            border-radius: 15px;
+            transition: width 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .sentiment-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .tag.concern {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+
+        .tag.support {
+            background: rgba(72, 187, 120, 0.2);
+            color: #68d391;
+            border: 1px solid rgba(72, 187, 120, 0.3);
+        }
+
+        .tag.question {
+            background: rgba(237, 137, 54, 0.2);
+            color: #f6ad55;
+            border: 1px solid rgba(237, 137, 54, 0.3);
+        }
+
+        .platform-breakdown {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .platform-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .platform-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .platform-name {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            margin-bottom: 8px;
+        }
+
+        .platform-sentiment {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .trending-topics {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .topic-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border-left: 3px solid;
+        }
+
+        .topic-item.hot {
+            border-left-color: #f56565;
+        }
+
+        .topic-item.warm {
+            border-left-color: #ed8936;
+        }
+
+        .topic-item.cool {
+            border-left-color: #4299e1;
+        }
+
+        .topic-text {
+            flex: 1;
+        }
+
+        .topic-mentions {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #667eea;
+        }
+
+        .alert-box {
+            background: rgba(245, 101, 101, 0.1);
+            border: 1px solid rgba(245, 101, 101, 0.3);
+            border-left: 4px solid #f56565;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .alert-box.warning {
+            background: rgba(237, 137, 54, 0.1);
+            border-color: rgba(237, 137, 54, 0.3);
+            border-left-color: #ed8936;
+        }
+
+        .alert-box.info {
+            background: rgba(66, 153, 225, 0.1);
+            border-color: rgba(66, 153, 225, 0.3);
+            border-left-color: #4299e1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .prediction-box {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .prediction-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .prediction-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e0e0e0;
+        }
+
+        .confidence-indicator {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+
+        .confidence-high {
+            background: rgba(72, 187, 120, 0.2);
+            color: #68d391;
+        }
+
+        .confidence-medium {
+            background: rgba(237, 137, 54, 0.2);
+            color: #f6ad55;
+        }
+
+        .confidence-low {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .status-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .platform-breakdown {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 Sentient Pulse</h1>
+            <p class="subtitle">Community Governance Intelligence Platform</p>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="status-bar">
+            <div class="status-card">
+                <div class="label">Overall Sentiment</div>
+                <div class="value">73%</div>
+                <div class="change positive">↑ +5% from last week</div>
+            </div>
+            <div class="status-card">
+                <div class="label">Active Proposals</div>
+                <div class="value">8</div>
+                <div class="change">3 ending soon</div>
+            </div>
+            <div class="status-card">
+                <div class="label">Community Engagement</div>
+                <div class="value">15.2K</div>
+                <div class="change positive">↑ +12% messages today</div>
+            </div>
+            <div class="status-card">
+                <div class="label">Consensus Score</div>
+                <div class="value">68%</div>
+                <div class="change negative">↓ -3% (polarized)</div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div class="alert-box warning">
+            <div class="alert-title">
+                ⚠️ Controversy Detected
+            </div>
+            <p>Proposal #42 "Model Training Budget Increase" showing high polarization (35% against). Community split
+                detected on Discord.</p>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-content">
+            <!-- Active Proposals -->
+            <div class="panel">
+                <h2>📊 Active Governance Proposals</h2>
+
+                <div class="proposal-card positive">
+                    <div class="proposal-title">#45: Integration with Polygon zkEVM</div>
+                    <div class="proposal-meta">
+                        <span>Ends in 3 days</span>
+                        <span>1,247 participants</span>
+                    </div>
+
+                    <div class="sentiment-gauge">
+                        <span style="font-size: 2rem;">😊</span>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 85%;">85% Positive</div>
+                        </div>
+                    </div>
+
+                    <div class="sentiment-tags">
+                        <span class="tag support">Strong support on Twitter</span>
+                        <span class="tag support">Devs excited (Discord)</span>
+                    </div>
+
+                    <div class="prediction-box">
+                        <div class="prediction-title">Predicted Outcome</div>
+                        <div class="prediction-value">
+                            ✅ PASS
+                            <span class="confidence-indicator confidence-high">92% confidence</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="proposal-card negative">
+                    <div class="proposal-title">#42: Increase Model Training Budget by 40%</div>
+                    <div class="proposal-meta">
+                        <span>Ends in 5 days</span>
+                        <span>2,105 participants</span>
+                    </div>
+
+                    <div class="sentiment-gauge">
+                        <span style="font-size: 2rem;">😐</span>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill"
+                                style="width: 52%; background: linear-gradient(90deg, #ed8936, #f6ad55);">52% Mixed
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sentiment-tags">
+                        <span class="tag concern">Cost concerns (Reddit)</span>
+                        <span class="tag question">ROI unclear (Forums)</span>
+                        <span class="tag support">Core team supportive</span>
+                    </div>
+
+                    <div class="prediction-box">
+                        <div class="prediction-title">Predicted Outcome</div>
+                        <div class="prediction-value">
+                            ❓ UNCERTAIN
+                            <span class="confidence-indicator confidence-medium">58% confidence</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="proposal-card positive">
+                    <div class="proposal-title">#43: Launch Sentient NFT Marketplace</div>
+                    <div class="proposal-meta">
+                        <span>Ends in 8 days</span>
+                        <span>892 participants</span>
+                    </div>
+
+                    <div class="sentiment-gauge">
+                        <span style="font-size: 2rem;">😊</span>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 78%;">78% Positive</div>
+                        </div>
+                    </div>
+
+                    <div class="sentiment-tags">
+                        <span class="tag support">Artists enthusiastic</span>
+                        <span class="tag support">Good timing (Telegram)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Platform Sentiment Breakdown -->
+            <div class="panel">
+                <h2>📱 Platform Sentiment Breakdown</h2>
+
+                <div class="platform-breakdown">
+                    <div class="platform-card">
+                        <div class="platform-icon"><img src="x icon.png" width="50" height="35" alt="Twitter"></div>
+                        <div class="platform-name">Twitter/X</div>
+                        <div class="platform-sentiment" style="color: #48bb78;">+72%</div>
+                        <div style="font-size: 0.85rem; color: #a0a0a0; margin-top: 7px;">8.5K mentions today</div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon"> <img src="Discord logo.png" width="50" height="40" alt="Discord">
+                        </div>
+                        <div class="platform-name">Discord</div>
+                        <div class="platform-sentiment" style="color: #ed8936;">+58%</div>
+                        <div style="font-size: 0.85rem; color: #a0a0a0; margin-top: 5px;">12.3K messages</div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon"> <img src="Telegram icon.png" width="50" height="35" alt="Telegram">
+                        </div>
+                        <div class="platform-name">Telegram</div>
+                        <div class="platform-sentiment" style="color: #48bb78;">+81%</div>
+                        <div style="font-size: 0.85rem; color: #a0a0a0; margin-top: 5px;">5.2K messages</div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon"><img src="Reddit logo.png" width="50" height="35" alt="Reddit"></div>
+                        <div class="platform-name">Reddit</div>
+                        <div class="platform-sentiment" style="color: #ed8936;">+63%</div>
+                        <div style="font-size: 0.85rem; color: #a0a0a0; margin-top: 5px;">2.1K comments</div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon"><img src="Github icon.png" width="50" height="35" alt="Github">
+                        </div>
+                        <div class="platform-name">GitHub</div>
+                        <div class="platform-sentiment" style="color: #48bb78;">+88%</div>
+                        <div style="font-size: 0.85rem; color: #a0a0a0; margin-top: 5px;">147 discussions</div>
+                    </div>
+
+                    <div class="platform-card">
+                        <div class="platform-icon"><img src="Forum icon.png" width="50" height="40" alt="Forum"></div>
+                        <div class="platform-name">Forums</div>
+                        <div class="platform-sentiment" style="color: #f56565;">+42%</div>
+                        <div style="font-size: 0.85rem; color: #a0a0a0; margin-top: 5px;">890 posts</div>
+                    </div>
+                </div>
+
+                <h2 style="margin-top: 30px;">🔥 Trending Topics</h2>
+                <div class="trending-topics">
+                    <div class="topic-item hot">
+                        <div class="topic-text">
+                            <div style="font-weight: 600;">Polygon Integration</div>
+                            <div style="font-size: 0.85rem; color: #a0a0a0;">Excitement building for zkEVM launch</div>
+                        </div>
+                        <span class="topic-mentions">1,247 mentions</span>
+                    </div>
+
+                    <div class="topic-item warm">
+                        <div class="topic-text">
+                            <div style="font-weight: 600;">Training Budget Debate</div>
+                            <div style="font-size: 0.85rem; color: #a0a0a0;">Split community on cost vs. benefits</div>
+                        </div>
+                        <span class="topic-mentions">892 mentions</span>
+                    </div>
+
+                    <div class="topic-item cool">
+                        <div class="topic-text">
+                            <div style="font-weight: 600;">NFT Marketplace Launch</div>
+                            <div style="font-size: 0.85rem; color: #a0a0a0;">Artists showing strong interest</div>
+                        </div>
+                        <span class="topic-mentions">645 mentions</span>
+                    </div>
+
+                    <div class="topic-item cool">
+                        <div class="topic-text">
+                            <div style="font-weight: 600;">Dobby Performance Updates</div>
+                            <div style="font-size: 0.85rem; color: #a0a0a0;">Community praising recent improvements
+                            </div>
+                        </div>
+                        <span class="topic-mentions">421 mentions</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Insights -->
+        <div class="panel full-width">
+            <h2>💡 AI-Powered Community Insights</h2>
+
+            <div class="alert-box info">
+                <div class="alert-title">
+                    🤖 Dobby-8B Analysis
+                </div>
+                <p style="margin-bottom: 10px;"><strong>Key Finding:</strong> Community sentiment remains positive
+                    overall,
+                    but concern is growing around budget allocation transparency. Discord shows split between technical
+                    contributors (supportive) and token holders (cautious).</p>
+                <p><strong>Recommendation:</strong> Proposal #42 authors should address ROI metrics and provide detailed
+                    breakdown before vote closes. Consider extending debate period by 3 days.</p>
+            </div>
+
+            <div class="alert-box">
+                <div class="alert-title">
+                    🚨 Alignment Alert
+                </div>
+                <p><strong>Issue:</strong> Recent sentiment on Forums shows concerns about centralization of
+                    decision-making. 15% of comments express worry about core team influence.</p>
+                <p style="margin-top: 8px;"><strong>Action Needed:</strong> Community governance review recommended.
+                    Consider implementing more transparent voting weight disclosure.</p>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="exportReport()">📊 Export Full Report</button>
+                <button class="btn btn-secondary" onclick="viewHistorical()">📈 View Historical Trends</button>
+                <button class="btn btn-secondary" onclick="setAlerts()">🔔 Configure Alerts</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulated real-time updates
+        setInterval(() => {
+            // Animate gauge fills on load
+            document.querySelectorAll('.gauge-fill').forEach(gauge => {
+                const width = gauge.style.width;
+                gauge.style.width = '0%';
+                setTimeout(() => {
+                    gauge.style.width = width;
+                }, 100);
+            });
+        }, 10000);
+
+        function exportReport() {
+            alert('📊 Generating comprehensive governance report...\n\n' +
+                '✅ Sentiment analysis across all platforms\n' +
+                '✅ Voting predictions with confidence scores\n' +
+                '✅ Community concerns and support indicators\n' +
+                '✅ Blockchain-verified timestamps\n\n' +
+                'Report will be ready in 30 seconds!');
+        }
+
+        function viewHistorical() {
+            alert('📈 Loading historical sentiment trends...\n\n' +
+                'View sentiment evolution over:\n' +
+                '• Last 7 days\n' +
+                '• Last 30 days\n' +
+                '• All-time\n\n' +
+                'Track how community mood correlates with proposals and events.');
+        }
+
+        function setAlerts() {
+            alert('🔔 Configure Custom Alerts\n\n' +
+                'Get notified when:\n' +
+                '• Sentiment drops below threshold\n' +
+                '• Controversy detected on proposals\n' +
+                '• Vote predictions change significantly\n' +
+                '• Community split exceeds 40%\n\n' +
+                'Alerts sent via Discord, Email, or Telegram');
+        }
+
+        // Simulate live updates
+        function simulateLiveUpdate() {
+            const statusCards = document.querySelectorAll('.status-card .value');
+            statusCards.forEach(card => {
+                const currentValue = parseInt(card.textContent);
+                const change = Math.random() > 0.5 ? 1 : -1;
+                card.style.transition = 'all 0.5s ease';
+                card.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    card.style.transform = 'scale(1)';
+                }, 300);
+            });
+        }
+
+        // Simulate updates every 30 seconds
+        setInterval(simulateLiveUpdate, 30000);
+    </script>
+</body>
+
+</html>
