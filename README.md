@@ -6,7 +6,10 @@
 
 Sentient Pulse monitors community sentiment across Discord, Twitter, Telegram, Reddit, and forums to provide real-time governance intelligence for the Sentient Foundation ecosystem.
 
-[Live Demo](#) | [Documentation](#) | [Discord](#) | [Twitter](#)
+[Live Demo](#) | [Documentation](#) | [Discord](#) | [Twitter](#)  
+
+
+<img width="1905" height="721" alt="Screenshot 2025-10-06 183442" src="https://github.com/user-attachments/assets/20fd7582-9d51-4538-a580-6211a7245f50" />
 
 ---
 
@@ -51,6 +54,8 @@ One dashboard, all community voices
 - **Reddit**: Subreddit discussion tracking
 - **GitHub**: Developer sentiment from issues/PRs
 - **Forums**: Long-form discussion analysis
+- <img width="1903" height="1003" alt="Screenshot 2025-10-06 183504" src="https://github.com/user-attachments/assets/525768fb-aa01-45de-baa7-b352d65109f0" />
+
 
 ### 🤖 **AI-Powered Insights**
 Leveraging Dobby-8B for advanced analysis
